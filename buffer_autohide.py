@@ -118,14 +118,14 @@ def hide_buffer_cb(data, signal, signal_data):
     it will not become hidden.
 
     :param data: Pointer
-    :param signal: Signal sent by Weechat
-    :param signal_data: Data sent with signal
+    :param signal: Signal sent from Weechat. In this case: buffer_switch
+    :param signal_data: Data sent with signal. In this case: Pointer of the new buffer
     :returns: callback return value expected by Weechat.
     """
     global CURRENT_BUFFER
 
     previous_buffer = CURRENT_BUFFER
-    CURRENT_BUFFER = weechat.current_buffer()
+    CURRENT_BUFFER = signal_data
 
     plugin = weechat.buffer_get_string(previous_buffer, "plugin")
     full_name = weechat.buffer_get_string(previous_buffer, "full_name")
@@ -159,6 +159,7 @@ def hide_buffer_cb(data, signal, signal_data):
             return WEECHAT_RC_OK
 
     weechat.buffer_set(previous_buffer, "hidden", "1")
+    weechat.buffer_set(CURRENT_BUFFER, "hidden", "0")
     return WEECHAT_RC_OK
 
 
